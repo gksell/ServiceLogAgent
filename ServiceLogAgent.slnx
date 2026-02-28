@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ServiceLogAgent.Api/ServiceLogAgent.Api.csproj" />
+    <Project Path="src/ServiceLogAgent.Application/ServiceLogAgent.Application.csproj" />
+    <Project Path="src/ServiceLogAgent.Domain/ServiceLogAgent.Domain.csproj" />
+    <Project Path="src/ServiceLogAgent.Persistence/ServiceLogAgent.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ServiceLogAgent.Api.Tests/ServiceLogAgent.Api.Tests.csproj" />
+  </Folder>
+</Solution>
