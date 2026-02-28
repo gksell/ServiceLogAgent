@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Serilog;
+using ServiceLogAgent.Application;
 using ServiceLogAgent.Api.Extensions;
 using ServiceLogAgent.Api.Middlewares;
-using ServiceLogAgent.Persistence.Context;
+using ServiceLogAgent.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +18,8 @@ builder.Host.UseSerilog((ctx, services, config) =>
 
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
-
-builder.Services.AddDbContext<ServiceLogDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddApplication();
+builder.Services.AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 

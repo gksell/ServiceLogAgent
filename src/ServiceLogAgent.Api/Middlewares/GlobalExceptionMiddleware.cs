@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using ServiceLogAgent.Application.Common;
 
 namespace ServiceLogAgent.Api.Middlewares;
 
@@ -18,19 +18,20 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
             logger.LogError(ex, "Unhandled exception while processing request.");
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            context.Response.ContentType = "application/problem+json";
+            context.Response.ContentType = "application/json";
 
-            var problem = new ProblemDetails
+            var response = GenericResponse<object>.Fail(
+                "An unexpected error occurred.",
+                ex.Message);
+            var envelope = new
             {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "An unexpected error occurred.",
-                Detail = "See logs for details.",
-                Instance = context.Request.Path
+                response.Success,
+                response.Message,
+                response.Errors,
+                CorrelationId = context.Response.Headers["X-Correlation-Id"].ToString()
             };
 
-            problem.Extensions["correlationId"] = context.Response.Headers["X-Correlation-Id"].ToString();
-
-            await context.Response.WriteAsJsonAsync(problem);
+            await context.Response.WriteAsJsonAsync(envelope);
         }
     }
 }

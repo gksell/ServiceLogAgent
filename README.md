@@ -1,6 +1,6 @@
-# ServiceLogAgent
+ï»¿# ServiceLogAgent
 
-Service çaðrýlarý için request/response seviyesinde log toplayan bir .NET 8 Web API örneði.
+Service cagrilari icin request/response seviyesinde log toplayan bir .NET 8 Web API ornegi.
 
 ## Teknoloji
 - .NET 8 Web API
@@ -8,14 +8,20 @@ Service çaðrýlarý için request/response seviyesinde log toplayan bir .NET 8 Web 
 - Serilog (Console + rolling file)
 - xUnit
 
-## Çalýþtýrma
+## Mimari Notlar
+- Controller katmani business logic icermez, sadece servis cagirir.
+- Is kurallari `Application` katmanindaki servislerde tutulur.
+- Tum endpoint donusleri `GenericResponse<T>` formatindadir.
+- Veri erisimi icin `IGenericRepository<T>` + `GenericRepository<T>` kullanilir.
+
+## Calistirma
 ```bash
 dotnet restore
 dotnet build
 dotnet run --project src/ServiceLogAgent.Api
 ```
 
-Uygulama development ortamýnda açýlýrken migration otomatik uygulanýr ve `servicelog.db` oluþturulur.
+Uygulama development ortaminda acilirken migration otomatik uygulanir ve `servicelog.db` olusturulur.
 
 ## Test
 ```bash
@@ -23,21 +29,21 @@ dotnet test
 ```
 
 ## Endpointler
-- `GET /api/ping` -> `{ "status": "ok" }`
-- `POST /api/echo` -> request body aynen döner
-- `GET /api/error` -> test amaçlý exception
-- `GET /api/logs?fromUtc=&toUtc=&statusCode=&contains=&page=&pageSize=` -> filtreli liste
-- `GET /api/logs/{id}` -> tek kayýt
+- `GET /api/ping`
+- `POST /api/echo`
+- `GET /api/error`
+- `GET /api/logs?fromUtc=&toUtc=&statusCode=&contains=&page=&pageSize=`
+- `GET /api/logs/{id}`
 
-## Neler Loglanýr?
+## Neler Loglanir?
 - CorrelationId / TraceId
-- Süre, method, path, query
+- Sure, method, path, query
 - Request/response headers (Authorization, Cookie, Set-Cookie maskeli)
-- Request/response body (64 KB üstü `(TRUNCATED)` ile kýrpýlýr)
+- Request/response body (64 KB ustu `(TRUNCATED)` ile kirpilir)
 - Status code, remote IP, user id (claim varsa), application key header
-- Hata mesajý ve stack trace
+- Hata mesaji ve stack trace
 
-## Loglarý Görme
-- Console loglarý: uygulama çýktýsý
-- Dosya loglarý: `src/ServiceLogAgent.Api/logs/servicelog-*.log`
-- DB loglarý: `ServiceLogs` tablosu (`servicelog.db`)
+## Loglari Gorme
+- Console loglari: uygulama ciktisi
+- Dosya loglari: `src/ServiceLogAgent.Api/logs/servicelog-*.log`
+- DB loglari: `ServiceLogs` tablosu (`servicelog.db`)

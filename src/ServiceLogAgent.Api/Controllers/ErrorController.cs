@@ -1,11 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using ServiceLogAgent.Application.Abstractions;
 
 namespace ServiceLogAgent.Api.Controllers;
 
 [ApiController]
 [Route("api/error")]
-public class ErrorController : ControllerBase
+public class ErrorController(IErrorService errorService) : ControllerBase
 {
     [HttpGet]
-    public IActionResult Throw() => throw new InvalidOperationException("Intentional exception for log testing.");
+    public async Task<IActionResult> Throw()
+    {
+        await errorService.ThrowForDemoAsync();
+        return Ok();
+    }
 }
